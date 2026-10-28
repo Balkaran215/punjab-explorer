@@ -486,6 +486,108 @@ $('clear-yes').addEventListener('click', async () => {
   toast('All data erased from this device.');
 });
 
+// ---------- live tracking (only while the app is open on screen) ----------
+const LIVE_MAX_ACCURACY_M = 100; // ignore fixes worse than this
+const LIVE_MIN_MOVE_M = 15;      // record a new point after moving this far...
+const LIVE_IDLE_MS = 60e3;       // ...or after this long standing still (so stops get timed)
+const LIVE_RENDER_MS = 15e3;
+const LIVE_SAVE_MS = 30e3;
+
+const live = { watchId: null, wakeLock: null, follow: true, count: 0, lastRender: 0, lastSave: 0, marker: null, accuracy: null };
+
+function liveButton() {
+  const on = live.watchId !== null;
+  $('btn-live').classList.toggle('on', on);
+  $('btn-live').setAttribute('aria-pressed', on);
+  $('live-count').textContent = on && live.count ? live.count : '';
+}
+
+async function keepAwake() {
+  try { if (live.watchId !== null && 'wakeLock' in navigator) live.wakeLock = await navigator.wakeLock.request('screen'); } catch { /* not allowed */ }
+}
+
+async function liveSave() {
+  live.lastSave = Date.now();
+  await db.set('data', store).catch(() => {});
+}
+
+function liveRender() {
+  live.lastRender = Date.now();
+  const atLatest = +$('day').value >= +$('day').max;
+  const dayCount = days.length;
+  if (!days.includes(istDay(Date.now()))) refreshDays();
+  if (atLatest || days.length !== dayCount) render(); // don't yank the slider if they're replaying an old day
+}
+
+function onLivePosition(pos) {
+  const { latitude: lat, longitude: lng, accuracy } = pos.coords;
+  const t = pos.timestamp || Date.now();
+
+  if (!live.marker) {
+    live.accuracy = L.circle([lat, lng], { radius: accuracy, pane: 'stops', color: '#2b8cff', weight: 1, fillOpacity: 0.1, interactive: false }).addTo(map);
+    live.marker = L.marker([lat, lng], { icon: L.divIcon({ className: 'you-are-here', iconSize: [18, 18] }), interactive: false, keyboard: false }).addTo(map);
+    map.flyTo([lat, lng], Math.max(map.getZoom(), 14));
+  } else {
+    live.marker.setLatLng([lat, lng]);
+    live.accuracy.setLatLng([lat, lng]).setRadius(accuracy);
+    if (live.follow && !map.getBounds().pad(-0.2).contains([lat, lng])) map.panTo([lat, lng]);
+  }
+
+  if (accuracy > LIVE_MAX_ACCURACY_M || !inKeepBox(lat, lng)) return;
+  const last = store.points[store.points.length - 1];
+  if (last && t <= last[0]) return;
+  if (last && t - last[0] < LIVE_IDLE_MS && distM(last[1], last[2], lat, lng) < LIVE_MIN_MOVE_M) return;
+  store.points.push([t, +lat.toFixed(6), +lng.toFixed(6)]);
+  live.count++;
+  liveButton();
+
+  const now = Date.now();
+  if (now - live.lastRender > LIVE_RENDER_MS) liveRender();
+  if (now - live.lastSave > LIVE_SAVE_MS) liveSave();
+}
+
+function onLiveError(err) {
+  if (err.code === err.PERMISSION_DENIED) {
+    stopLive();
+    toast('Location is blocked. iPhone Settings → Privacy → Location Services → Safari Websites → While Using the App.', 8000);
+  } else if (err.code === err.POSITION_UNAVAILABLE) {
+    toast('No GPS fix yet. Try near a window or outside.');
+  }
+}
+
+function startLive() {
+  if (!('geolocation' in navigator)) { toast('This browser has no location support.'); return; }
+  live.follow = true;
+  live.count = 0;
+  live.watchId = navigator.geolocation.watchPosition(onLivePosition, onLiveError, { enableHighAccuracy: true, maximumAge: 5000, timeout: 30000 });
+  keepAwake();
+  try { localStorage.setItem('live', '1'); } catch { /* storage blocked */ }
+  liveButton();
+  toast('Live tracking on. Keep the app open: iPhone pauses it when the screen locks. Google Timeline still covers those times.', 7000);
+}
+
+function stopLive() {
+  if (live.watchId !== null) navigator.geolocation.clearWatch(live.watchId);
+  live.watchId = null;
+  live.wakeLock?.release().catch(() => {});
+  live.wakeLock = null;
+  live.marker?.remove();
+  live.accuracy?.remove();
+  live.marker = live.accuracy = null;
+  try { localStorage.removeItem('live'); } catch { /* storage blocked */ }
+  liveButton();
+  liveSave();
+  liveRender();
+}
+
+$('btn-live').addEventListener('click', () => (live.watchId === null ? startLive() : stopLive()));
+map.on('dragstart', () => { live.follow = false; });
+document.addEventListener('visibilitychange', () => {
+  if (live.watchId === null) return;
+  if (document.visibilityState === 'hidden') liveSave();
+  else { keepAwake(); liveRender(); }
+});
+
 // ---------- start ----------
 (async function init() {
   const [pindData, outline, saved] = await Promise.all([
@@ -523,6 +625,7 @@ $('clear-yes').addEventListener('click', async () => {
   if (!store.points.length && !store.visits.length) {
     try { if (!localStorage.getItem('seenHelp')) { $('help').showModal(); localStorage.setItem('seenHelp', '1'); } } catch { /* storage blocked */ }
   }
+  try { if (localStorage.getItem('live')) startLive(); } catch { /* storage blocked */ }
 })();
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});

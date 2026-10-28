@@ -1,5 +1,5 @@
 // Offline support: app files cached on install, map tiles cached as you view them.
-const APP = 'app-v1';
+const APP = 'app-v2';
 const TILES = 'tiles-v1';
 const APP_FILES = [
   './', 'index.html', 'app.js', 'style.css', 'manifest.json',

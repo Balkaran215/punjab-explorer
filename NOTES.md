@@ -2,6 +2,7 @@
 
 ## Status (2026-10-28)
 - v1 is live and tested with synthetic GPX and iPhone-format Timeline data, at desktop and phone sizes.
+- Live tracking added (tested with a simulated GPS feed, not yet on a real iPhone).
 - Not yet tested with a **real** Google Maps Timeline export. That's the first thing to check when the owner sends one. Export formats change, and `parseTimeline` is the likely place to fix.
 
 ## Known limitations
@@ -11,8 +12,9 @@
 - **Timeline accuracy:** Google's path points can be sparse or snapped, so a quick drive past a village may miss lighting it.
 - **Places outside Punjab** (Chandigarh, Himachal border) are kept as points inside `KEEP_BOX` but can't light up (there's no cell for them).
 
+- **Live + Timeline overlap:** if both record the same stretch, their points interleave and the line may zigzag slightly. Possible fix: prefer live points and drop Timeline points within their time range.
+
 ## Ideas (not built)
-- "Track live" button: `navigator.geolocation.watchPosition` while the app is open, to add precise points.
 - Route estimated gaps along roads (OSRM public API), still drawn dotted.
 - Permanent name labels on lit pinds at high zoom.
 - Share image: render the explored map to a PNG to show people.

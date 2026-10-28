@@ -45,6 +45,13 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
 .btn:hover { border-color: #3a4566; }
 .btn.primary { background: var(--gold); color: #1a1205; border-color: var(--gold); font-weight: 700; }
 .btn.danger { color: var(--danger); }
+#btn-live .dot { display: inline-block; width: 9px; height: 9px; margin-right: 7px; border-radius: 50%; background: var(--muted); vertical-align: 1px; }
+#btn-live.on { border-color: var(--danger); }
+#btn-live.on .dot { background: var(--danger); animation: pulse 1.6s infinite; }
+#live-count { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; }
+.you-are-here { background: #2b8cff; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 0 0 0 rgba(43,140,255,.6); animation: ping 2s infinite; }
+@keyframes pulse { 50% { opacity: .3; } }
+@keyframes ping { 70% { box-shadow: 0 0 0 16px rgba(43,140,255,0); } 100% { box-shadow: 0 0 0 0 rgba(43,140,255,0); } }
 
 #toast { position: fixed; z-index: 1100; left: 50%; transform: translateX(-50%); bottom: calc(140px + var(--safe-bottom));
   padding: 10px 16px; border-radius: 10px; background: #111827; border: 1px solid var(--line); max-width: 90vw; }

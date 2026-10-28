@@ -17,6 +17,7 @@ iPhone gives web apps no background GPS. **Recording is done by Google Maps Time
   - pind lookup: `buildIndex` grid (0.02°) + `pindAt` point-in-polygon
   - `analyse(until)`: `detectStops` + Timeline visits → `mergeStops` → arrive/leave nodes → colored runs (real vs estimated) and per-pind visits
   - `render()`: restyles pinds, redraws path/stops, updates stats and the day slider
+  - live tracking: `startLive`/`stopLive`/`onLivePosition` use `watchPosition` while the app is open, plus a Wake Lock. Fixes over 100 m accuracy are dropped. A point is recorded after moving 15 m or every 60 s while still. Render is throttled to 15 s and saves to 30 s. It auto-resumes on launch if it was left on (`localStorage.live`). iPhone pauses it when the screen locks.
 - `style.css`: dark theme tokens in `:root`. `[hidden]{display:none!important}` is needed because of flex/display rules.
 - `sw.js`: app files network-first, tiles cache-first. **Bump `APP`/`TILES` cache names when changing cached file lists.**
 - `data/punjab_pinds.json`: about 7,900 Voronoi cells (props: `name`, `pa`, `kind`, `district`, `lat`, `lng`). `data/punjab_outline.json`: state border.
@@ -47,6 +48,8 @@ No test framework. To check behaviour:
 3. Run headless Chrome with a fresh profile dir each time:
    `chrome.exe --headless=new --user-data-dir=$TEMP/pe-$RANDOM --enable-logging=stderr --v=0 --virtual-time-budget=60000 --dump-dom URL`, and grep stderr for `CONSOLE`. Use `--screenshot=... --window-size=420,860` for a phone view.
 4. Expected with both test files: 4 stops, 62 pinds lit, 6 districts, 2 estimated runs.
+   Live tracking: override `navigator.geolocation` with `Object.defineProperty` and a fake `watchPosition` that replays fixes, then click `#btn-live`.
+   Test pages need `<meta charset="utf-8">`, or `⋯` renders garbled.
 5. Delete `_test.html` and stop only that server process (match `http.server 8765` on the command line; never kill all python.exe).
 
 ## Conventions
