@@ -1,0 +1,111 @@
+[
+ {
+  "startTime": "2026-10-21T10:00:00.000+05:30",
+  "endTime": "2026-10-21T10:50:00.000+05:30",
+  "visit": {
+   "hierarchyLevel": "0",
+   "topCandidate": {
+    "probability": "0.9",
+    "semanticType": "Unknown",
+    "placeID": "x",
+    "placeLocation": "geo:30.901,75.8573"
+   }
+  }
+ },
+ {
+  "startTime": "2026-10-21T10:50:00.000+05:30",
+  "endTime": "2026-10-21T12:05:00.000+05:30",
+  "activity": {
+   "start": "geo:30.901,75.8573",
+   "end": "geo:30.8165,75.1717",
+   "distanceMeters": "68000",
+   "topCandidate": {
+    "type": "in passenger vehicle",
+    "probability": "0.9"
+   }
+  }
+ },
+ {
+  "startTime": "2026-10-21T10:50:00.000+05:30",
+  "endTime": "2026-10-21T12:05:00.000+05:30",
+  "timelinePath": [
+   {
+    "point": "geo:30.901000,75.857300",
+    "durationMinutesOffsetFromStartTime": "0"
+   },
+   {
+    "point": "geo:30.895367,75.811593",
+    "durationMinutesOffsetFromStartTime": "5"
+   },
+   {
+    "point": "geo:30.889733,75.765887",
+    "durationMinutesOffsetFromStartTime": "10"
+   },
+   {
+    "point": "geo:30.884100,75.720180",
+    "durationMinutesOffsetFromStartTime": "15"
+   },
+   {
+    "point": "geo:30.878467,75.674473",
+    "durationMinutesOffsetFromStartTime": "20"
+   },
+   {
+    "point": "geo:30.872833,75.628767",
+    "durationMinutesOffsetFromStartTime": "25"
+   },
+   {
+    "point": "geo:30.867200,75.583060",
+    "durationMinutesOffsetFromStartTime": "30"
+   },
+   {
+    "point": "geo:30.861567,75.537353",
+    "durationMinutesOffsetFromStartTime": "35"
+   },
+   {
+    "point": "geo:30.855933,75.491647",
+    "durationMinutesOffsetFromStartTime": "40"
+   },
+   {
+    "point": "geo:30.850300,75.445940",
+    "durationMinutesOffsetFromStartTime": "45"
+   },
+   {
+    "point": "geo:30.844667,75.400233",
+    "durationMinutesOffsetFromStartTime": "50"
+   },
+   {
+    "point": "geo:30.839033,75.354527",
+    "durationMinutesOffsetFromStartTime": "55"
+   },
+   {
+    "point": "geo:30.833400,75.308820",
+    "durationMinutesOffsetFromStartTime": "60"
+   },
+   {
+    "point": "geo:30.827767,75.263113",
+    "durationMinutesOffsetFromStartTime": "65"
+   },
+   {
+    "point": "geo:30.822133,75.217407",
+    "durationMinutesOffsetFromStartTime": "70"
+   },
+   {
+    "point": "geo:30.816500,75.171700",
+    "durationMinutesOffsetFromStartTime": "75"
+   }
+  ]
+ },
+ {
+  "startTime": "2026-10-21T12:05:00.000+05:30",
+  "endTime": "2026-10-21T13:05:00.000+05:30",
+  "visit": {
+   "hierarchyLevel": "0",
+   "topCandidate": {
+    "probability": "0.8",
+    "semanticType": "Unknown",
+    "placeID": "y",
+    "placeLocation": "geo:30.8165,75.1717"
+   }
+  }
+ }
+]

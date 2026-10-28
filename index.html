@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Punjab Explorer</title>
+<meta name="theme-color" content="#05070d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Punjab Explorer">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="map"></div>
+
+<header id="hud">
+  <div class="title">PUNJAB <span>EXPLORER</span></div>
+  <div class="stats">
+    <div><b id="stat-pinds">0</b><small>/ <span id="stat-total">0</span> pinds explored</small></div>
+    <div><b id="stat-districts">0</b><small>/ 23 districts</small></div>
+    <div><b id="stat-stops">0</b><small>stops</small></div>
+  </div>
+  <div class="bar"><div id="stat-bar"></div></div>
+</header>
+
+<div id="timeline" hidden>
+  <label for="day">Showing up to <b id="day-label"></b></label>
+  <input type="range" id="day" min="0" max="0" value="0">
+</div>
+
+<nav id="controls">
+  <label class="btn primary">Import location file
+    <input type="file" id="file" accept=".json,.gpx,application/json,application/gpx+xml" multiple hidden>
+  </label>
+  <button class="btn" id="btn-menu" aria-label="More">⋯</button>
+  <div id="menu" hidden>
+    <button class="btn" id="btn-locate">Go to the end of my path</button>
+    <button class="btn" id="btn-export">Save backup file</button>
+    <label class="btn">Load backup file<input type="file" id="backup" accept=".json" hidden></label>
+    <button class="btn" id="btn-help">How to record on iPhone</button>
+    <button class="btn danger" id="btn-clear">Erase all my data</button>
+  </div>
+</nav>
+
+<div id="toast" hidden></div>
+
+<dialog id="help">
+  <h2>Recording your travels</h2>
+  <p>A web app can't track you in the background on iPhone, so let Google Maps record and then import its file here.</p>
+  <ol>
+    <li>Install <b>Google Maps</b> and sign in.</li>
+    <li>iPhone <b>Settings → Privacy → Location Services → Google Maps</b>: <b>Always</b> and <b>Precise Location</b> ON.</li>
+    <li>In Google Maps tap your <b>profile picture → Your Timeline</b> and turn Timeline on. It records even with no mobile data.</li>
+    <li>When you want to update the map: Google Maps <b>Settings → Personal content → Export Timeline data</b>. Save the file to Files.</li>
+    <li>Here, tap <b>Import location file</b> and pick it. You can re-import the same file again later; duplicates are skipped.</li>
+  </ol>
+  <p><b>More detail (optional):</b> the free app <b>Open GPX Tracker</b> records every few seconds while it's running. Export a GPX and import it here too.</p>
+  <p class="muted">Your location never leaves this device. To see the map on another device, use <i>Save backup file</i> here and <i>Load backup file</i> there.</p>
+  <button class="btn primary" id="help-close">Got it</button>
+</dialog>
+
+<dialog id="confirm-clear">
+  <p>Erase every imported point from this device? Save a backup first if you want to keep it.</p>
+  <div class="row">
+    <button class="btn" id="clear-no">Cancel</button>
+    <button class="btn danger" id="clear-yes">Erase</button>
+  </div>
+</dialog>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

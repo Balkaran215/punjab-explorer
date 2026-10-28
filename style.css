@@ -1,0 +1,72 @@
+:root {
+  --bg: #05070d;
+  --panel: rgba(10, 14, 24, 0.86);
+  --line: #1f2840;
+  --text: #e8e4d8;
+  --muted: #8a8fa3;
+  --gold: #ffc65c;
+  --danger: #ff6b6b;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+  font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+#map { position: fixed; inset: 0; background: var(--bg); }
+.leaflet-container { background: var(--bg); }
+.leaflet-control-attribution { background: rgba(0,0,0,.5) !important; color: #666 !important; font-size: 10px; }
+.leaflet-control-attribution a { color: #888 !important; }
+.leaflet-control-layers, .leaflet-bar a { background: var(--panel) !important; color: var(--text) !important; border-color: var(--line) !important; }
+.leaflet-control-layers-toggle { filter: invert(1); }
+.leaflet-top.leaflet-right { top: var(--safe-top); }
+
+#hud { position: fixed; z-index: 1000; top: calc(12px + var(--safe-top)); left: 12px; right: 12px;
+  max-width: 460px; padding: 12px 14px; background: var(--panel); border: 1px solid var(--line);
+  border-radius: 14px; backdrop-filter: blur(8px); pointer-events: none; }
+.title { font-weight: 800; letter-spacing: .18em; font-size: 13px; color: var(--gold); }
+.title span { color: var(--text); font-weight: 400; }
+.stats { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 6px; }
+.stats b { font-size: 20px; font-variant-numeric: tabular-nums; margin-right: 4px; }
+.stats small { color: var(--muted); }
+.bar { height: 4px; margin-top: 8px; background: var(--line); border-radius: 2px; overflow: hidden; }
+#stat-bar { height: 100%; width: 0; background: linear-gradient(90deg, #ff8a3d, var(--gold)); transition: width .6s; }
+
+#timeline { position: fixed; z-index: 1000; left: 12px; right: 12px; bottom: calc(76px + var(--safe-bottom));
+  max-width: 460px; padding: 10px 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; }
+#timeline label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+#timeline b { color: var(--text); }
+#timeline input { width: 100%; accent-color: var(--gold); }
+
+#controls { position: fixed; z-index: 1000; left: 12px; bottom: calc(16px + var(--safe-bottom)); display: flex; gap: 8px; align-items: flex-end; }
+#menu { position: absolute; bottom: 52px; left: 0; display: flex; flex-direction: column; gap: 6px; width: max-content; }
+.btn { display: inline-block; padding: 11px 16px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--panel); color: var(--text); font: inherit; cursor: pointer; text-align: left; backdrop-filter: blur(8px); }
+.btn:hover { border-color: #3a4566; }
+.btn.primary { background: var(--gold); color: #1a1205; border-color: var(--gold); font-weight: 700; }
+.btn.danger { color: var(--danger); }
+
+#toast { position: fixed; z-index: 1100; left: 50%; transform: translateX(-50%); bottom: calc(140px + var(--safe-bottom));
+  padding: 10px 16px; border-radius: 10px; background: #111827; border: 1px solid var(--line); max-width: 90vw; }
+
+dialog { max-width: min(520px, calc(100vw - 32px)); background: #0c111d; color: var(--text);
+  border: 1px solid var(--line); border-radius: 16px; padding: 20px; }
+dialog::backdrop { background: rgba(0,0,0,.6); }
+dialog h2 { margin-top: 0; color: var(--gold); font-size: 18px; }
+dialog li { margin-bottom: 6px; }
+.muted { color: var(--muted); }
+.row { display: flex; gap: 8px; justify-content: flex-end; }
+
+.leaflet-tooltip.pind-tip { background: #0c111d; color: var(--text); border: 1px solid var(--gold);
+  border-radius: 10px; padding: 8px 11px; box-shadow: 0 4px 20px rgba(0,0,0,.6); white-space: normal; width: max-content; max-width: 280px; }
+.pind-tip .locked .name { color: var(--muted); }
+.leaflet-tooltip.pind-tip::before { display: none; }
+.pind-tip .name { font-weight: 700; font-size: 15px; color: var(--gold); }
+.pind-tip .pa { color: var(--muted); margin-left: 4px; }
+.pind-tip .district { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+.pind-tip .visit { font-size: 12px; font-variant-numeric: tabular-nums; }
+.pind-tip .visit i { color: var(--muted); font-style: normal; }
+
+@media (max-width: 520px) {
+  .leaflet-top.leaflet-right { top: calc(var(--safe-top) + 112px); }
+}
